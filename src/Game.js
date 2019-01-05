@@ -13,6 +13,7 @@ export default class Game {
         this.lastObstacleStep = 0;
         this.paused = false;
         this.gameOver = false;
+        this.bulletsCount = this.config.SURVIVAL ? this.config.BULLET_COUNT : Infinity;
         this._initHandlers();
     }
 
@@ -48,9 +49,6 @@ export default class Game {
         for (let i = 0; i < this.objects.length; i++) {
             this.objects[i].draw();
         }
-        // if (this.collision.exists()) {
-        //     return this.stop();
-        // }
         this.collision.process();
         this.addObstacle();
         requestAnimationFrame(this.draw.bind(this));
@@ -101,14 +99,17 @@ export default class Game {
     }
 
     addBullet() {
-        this.bullets.push(
-            new Bullet(this.ctx, {
-                position: [this.ship.x + this.ship.size, this.ship.y],
-                speed: this.config.BULLET_SPEED,
-                size: this.config.BULLET_SIZE,
-                health: this.config.BULLET_HEALTH,
-            }
-        ));
+        if (this.bulletsCount > 0) {
+            this.bullets.push(
+                new Bullet(this.ctx, {
+                    position: [this.ship.x + this.ship.size, this.ship.y],
+                    speed: this.config.BULLET_SPEED,
+                    size: this.config.BULLET_SIZE,
+                    health: this.config.BULLET_HEALTH,
+                }
+            ));
+        }
+        this.bulletsCount--;
     }
 
     get objects() {
@@ -120,7 +121,10 @@ export default class Game {
             speed: this.config.SHIP_SPEED,
             size: this.config.SHIP_SIZE,
             color: this.config.SHIP_COLOR,
-            colorBorder: this.config.SHIP_COLOR_BORDER
+            colorBorder: this.config.SHIP_COLOR_BORDER,
+            health: this.config.SURVIVAL ? 
+                    this.config.SHIP_HEALTH_SURVIVAL : 
+                    this.config.SHIP_HEALTH_CLASSIC,
         });
     }
 
@@ -195,8 +199,12 @@ export default class Game {
 
     _defaultConfig() {
         return {
+            SURVIVAL: 0,
+
             SHIP_SPEED: 2,
             SHIP_SIZE: 25,
+            SHIP_HEALTH_CLASSIC: 1,
+            SHIP_HEALTH_SURVIVAL: 100,
             SHIP_COLOR: 'peachpuff',
             SHIP_COLOR_BORDER: 'tomato',
 
@@ -211,6 +219,7 @@ export default class Game {
             BULLET_SPEED: 7,
             BULLET_SIZE: 5,
             BULLET_HEALTH: 20,
+            BULLET_COUNT:10,
 
             SCORE_TIMEOUT: 100,
             SCORE_POSITION: [50, 70],

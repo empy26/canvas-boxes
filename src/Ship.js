@@ -6,6 +6,7 @@ export default class Ship extends Object {
         super(ctx, config);
         this.speed = config.speed;
         this.position = this._initPosition();
+        this.health = config.health;
         this.keyPressed = [];
     }
 
