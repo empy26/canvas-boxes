@@ -13,7 +13,8 @@ export default class Game {
         this.lastObstacleStep = 0;
         this.paused = false;
         this.gameOver = false;
-        this.bulletsCount = this.config.SURVIVAL ? this.config.BULLET_COUNT : Infinity;
+        this.bulletsCount = Infinity;
+        this.collision.borderCollision.enabled = !this.config.SURVIVAL;
         this._initHandlers();
     }
 
@@ -22,6 +23,9 @@ export default class Game {
         this.obstacles = this._initObstacles();
         this.score = this._initScore();
         this.bullets = [];
+        if (this.config.SURVIVAL) {
+            this.bulletsCount = this.config.BULLET_COUNT;
+        }
         this.draw();
     }
 
