@@ -15,6 +15,7 @@ export default class Score extends Object {
         this.ctx.fillStyle = this.config.color;
         this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = 'white';
+        this.ctx.textAlign = 'left';
 	    this.ctx.strokeText(this.value, this.x, this.y);
 	    this.ctx.fillText(this.value, this.x, this.y);
     }

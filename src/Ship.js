@@ -21,6 +21,16 @@ export default class Ship extends Object {
         this.ctx.closePath();
         this.ctx.stroke();
         this.ctx.fill();
+
+        // healthbar
+        let height = this.health * 2;
+        let yPos = 200 + 10 - height;
+        this.ctx.fillStyle = 'red';
+        this.ctx.strokeStyle = 'white';
+        this.ctx.strokeRect(10, yPos, 10, height);
+        this.ctx.fillRect(10, yPos, 10, height);
+
+
     }
 
     addKey(key) {

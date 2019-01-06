@@ -3,6 +3,8 @@ import Score from './Score';
 import Ship from './Ship';
 import Obstacle from './Obstacle';
 import Bullet from './Bullet';
+import BulletKit from './kit/BulletKit';
+import HealthKit from './kit/HealthKit';
 
 export default class Game {
 
@@ -22,6 +24,7 @@ export default class Game {
         this.ship = this._initShip();
         this.obstacles = this._initObstacles();
         this.score = this._initScore();
+        this.kits = this._initKits();
         this.bullets = [];
         if (this.config.SURVIVAL) {
             this.bulletsCount = this.config.BULLET_COUNT;
@@ -55,6 +58,7 @@ export default class Game {
         }
         this.collision.process();
         this.addObstacle();
+        this.drawBulletsCount();
         requestAnimationFrame(this.draw.bind(this));
     }
 
@@ -85,6 +89,17 @@ export default class Game {
         this.ctx.fillText('Press space to replay', this.ctx.canvas.width / 2, boxY + 120);
     }
 
+    drawBulletsCount() {
+        let [x, y] = this.config.SCORE_POSITION;
+        this.ctx.font = `${this.size}px sans-serif`;
+        this.ctx.fillStyle = 'forestgreen';
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = 'white';
+        this.ctx.textAlign = 'left';
+	    this.ctx.strokeText(this.bulletsCount, x, y + 30);
+	    this.ctx.fillText(this.bulletsCount, x, y + 30);
+    }
+
     clearCanvas() {
         this.ctx.fillStyle = this.config.CANVAS_BACKGROUND;
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -103,21 +118,26 @@ export default class Game {
     }
 
     addBullet() {
-        if (this.bulletsCount > 0) {
-            this.bullets.push(
-                new Bullet(this.ctx, {
-                    position: [this.ship.x + this.ship.size, this.ship.y],
-                    speed: this.config.BULLET_SPEED,
-                    size: this.config.BULLET_SIZE,
-                    health: this.config.BULLET_HEALTH,
-                }
-            ));
+        if (this.bulletsCount <= 0) {
+            return;
         }
+        this.bullets.push(
+            new Bullet(this.ctx, {
+                position: [this.ship.x + this.ship.size, this.ship.y],
+                speed: this.config.BULLET_SPEED,
+                size: this.config.BULLET_SIZE,
+                health: this.config.BULLET_HEALTH,
+            }
+        ));
         this.bulletsCount--;
     }
 
     get objects() {
-        return this.obstacles.concat([this.ship, this.score], this.bullets);
+        return this.obstacles.concat(
+            [this.ship, this.score], 
+            this.bullets,
+            this.kits,
+        );
     }
 
     _initShip() {
@@ -148,6 +168,21 @@ export default class Game {
             color: this.config.OBSTACLE_COLOR,
             colorBorder: this.config.OBSTACLE_COLOR_BORDER
         });
+    }
+
+    _initKits() {
+        return [
+            new BulletKit(this.ctx, {
+                color: 'forestgreen',
+                colorBorder: 'darkgreen',
+                speed: this.config.OBSTACLE_SPEED,
+            }),
+            new HealthKit(this.ctx, {
+                color: 'red',
+                colorBorder: 'maroon',
+                speed: this.config.OBSTACLE_SPEED,
+            })
+        ];
     }
 
     _initScore() {
@@ -203,7 +238,7 @@ export default class Game {
 
     _defaultConfig() {
         return {
-            SURVIVAL: 0,
+            SURVIVAL: 1,
 
             SHIP_SPEED: 2,
             SHIP_SIZE: 25,
@@ -218,7 +253,7 @@ export default class Game {
             OBSTACLE_INIT_QUANTITY: 10,
             OBSTACLE_STEP: 150,
             OBSTACLE_COLOR: 'crimson',
-            OBSTACLE_COLOR_BORDER: 'darkred',
+            OBSTACLE_COLOR_BORDER: 'white',
 
             BULLET_SPEED: 7,
             BULLET_SIZE: 5,
@@ -226,7 +261,7 @@ export default class Game {
             BULLET_COUNT:10,
 
             SCORE_TIMEOUT: 100,
-            SCORE_POSITION: [50, 70],
+            SCORE_POSITION: [35, 30],
             SCORE_SIZE: 24,
             SCORE_COLOR: 'tomato',
 

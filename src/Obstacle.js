@@ -16,6 +16,7 @@ export default class Obstacle extends Object {
         this.ctx.fillStyle = this.config.color;
         this.ctx.strokeStyle = this.config.colorBorder;
         this.ctx.fillRect(x, y, this.size, this.size);
+        this.ctx.strokeRect(x, y, this.size, this.size);
     }
 
     reset() {

@@ -1,7 +1,8 @@
 import Game from "./Game";
-import ShipCollision from "./collision/ShipCollision";
+import ObstacleCollision from "./collision/ObstacleCollision";
 import BulletCollision from "./collision/BulletCollision";
 import BorderCollision from "./collision/BorderCollision";
+import KitCollision from "./collision/KitCollision";
 
 export default class Collision {
 
@@ -10,9 +11,10 @@ export default class Collision {
      */
     constructor(game) {
         this.game = game;
-        this.shipCollision = new ShipCollision(game);
+        this.obstacleCollision = new ObstacleCollision(game);
         this.bulletCollision = new BulletCollision(game);
         this.borderCollision = new BorderCollision(game);
+        this.kitCollision = new KitCollision(game);
     }
 
     process() {
@@ -24,9 +26,10 @@ export default class Collision {
     
     get collisionObjects() {
         return [
-            this.shipCollision,
+            this.obstacleCollision,
             this.bulletCollision,
             this.borderCollision,
+            this.kitCollision,
         ];
     }
 }

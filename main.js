@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
         SHIP_SPEED: 5,
         CANVAS_WIDTH: 900,
         CANVAS_HEIGHT: 500,
-        SURVIVAL: 1,
     });
     game.start();
     window.game = game;

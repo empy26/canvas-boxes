@@ -2,11 +2,15 @@ import BaseCollision from "./BaseCollision";
 import Obstacle from "../Obstacle";
 import Ship from "../Ship";
 
-export default class ShipCollision extends BaseCollision {
+export default class ObstacleCollision extends BaseCollision {
+
+    get obstacles() {
+        return this.game.obstacles;
+    }
 
     process() {
         let shipBorders = this.game.ship.borders;
-        let obstacles = this.game.obstacles;
+        let obstacles = this.obstacles;
         for (let i = 0; i < obstacles.length; i++) {
             let obstacleBorders = obstacles[i].borders;
             for (let s = 0; s < shipBorders.length; s++) {
