@@ -1,4 +1,5 @@
 import Object from './Object';
+import Game from './Game';
 
 export default class Obstacle extends Object {
     
@@ -13,10 +14,10 @@ export default class Obstacle extends Object {
 
         let x = this.x - this.size / 2;
         let y = this.y - this.size / 2;
-        this.ctx.fillStyle = this.config.color;
-        this.ctx.strokeStyle = this.config.colorBorder;
-        this.ctx.fillRect(x, y, this.size, this.size);
-        this.ctx.strokeRect(x, y, this.size, this.size);
+        let image = new Image(this.size, this.size);
+        image.src = this.sprite;
+
+        this.ctx.drawImage(image, x, y, this.size, this.size);
     }
 
     reset() {
@@ -65,6 +66,17 @@ export default class Obstacle extends Object {
         let x = this._getRandomValue(minX, maxX);
         let y = this._getRandomValue(0, this.ctx.canvas.height);
         return [x, y];
+    }
+
+    get sprite() {
+        let i = Math.ceil(this.size / (this.config.maxSize / 3));
+        if (i > 3) {
+            i = 3;
+        }
+        if (isNaN(i)) {
+            i = 1;
+        }
+        return Game.assets + `box-${i}.jpg`;
     }
 
 }

@@ -17,4 +17,8 @@ export default class HealthKit extends BaseKit {
         super.reset();
         this.value = 35;
     }
+
+    get sprite() {
+        return Game.assets + `kit-health.jpg`;
+    }
 }

@@ -5,6 +5,7 @@ import Obstacle from './Obstacle';
 import Bullet from './Bullet';
 import BulletKit from './kit/BulletKit';
 import HealthKit from './kit/HealthKit';
+import Background from './Background';
 
 export default class Game {
 
@@ -21,6 +22,7 @@ export default class Game {
     }
 
     start() {
+        this.background = this._initBackground();
         this.ship = this._initShip();
         this.obstacles = this._initObstacles();
         this.score = this._initScore();
@@ -52,7 +54,6 @@ export default class Game {
         if (this.paused || this.gameOver) {
             return;
         }
-        this.clearCanvas();
         for (let i = 0; i < this.objects.length; i++) {
             this.objects[i].draw();
         }
@@ -100,11 +101,6 @@ export default class Game {
 	    this.ctx.fillText(this.bulletsCount, x, y + 30);
     }
 
-    clearCanvas() {
-        this.ctx.fillStyle = this.config.CANVAS_BACKGROUND;
-        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    }
-
     addObstacle() {
         if (this.score.value % this.config.OBSTACLE_STEP !== 0) {
             return;
@@ -133,7 +129,9 @@ export default class Game {
     }
 
     get objects() {
-        return this.obstacles.concat(
+        // background object must be first
+        return [this.background].concat(
+            this.obstacles,
             [this.ship, this.score], 
             this.bullets,
             this.kits,
@@ -194,6 +192,12 @@ export default class Game {
         });
     }
 
+    _initBackground() {
+        return new Background(this.ctx, {
+            speed: this.config.OBSTACLE_SPEED
+        });
+    }
+
     _initCanvas() {
         const canvas = document.createElement('canvas');
         canvas.width = this.config.CANVAS_WIDTH;
@@ -248,7 +252,7 @@ export default class Game {
             SHIP_COLOR_BORDER: 'tomato',
 
             OBSTACLE_SPEED: 3,
-            OBSTACLE_MIN_SIZE: 10,
+            OBSTACLE_MIN_SIZE: 15,
             OBSTACLE_MAX_SIZE: 80,
             OBSTACLE_INIT_QUANTITY: 10,
             OBSTACLE_STEP: 150,
@@ -270,4 +274,8 @@ export default class Game {
             CANVAS_BACKGROUND: 'honeydew',
         };
     }
+
+    static get assets() {
+        return 'assets/';
+    };
 }

@@ -1,4 +1,5 @@
 import Object from './Object';
+import Game from './Game';
 
 export default class Ship extends Object {
     
@@ -8,19 +9,38 @@ export default class Ship extends Object {
         this.position = this._initPosition();
         this.health = config.health;
         this.keyPressed = [];
+        this.frame = 0;
+        this.ticks = 0;
+        this.ticksPerFrame = 2;
     }
 
     draw() {
         this._calculatePosition();
-        this.ctx.fillStyle = this.config.color;
-        this.ctx.strokeStyle = this.config.colorBorder;
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.x - this.size, this.y - this.size);
-        this.ctx.lineTo(this.x + this.size, this.y);
-        this.ctx.lineTo(this.x - this.size, this.y + this.size);
-        this.ctx.closePath();
-        this.ctx.stroke();
-        this.ctx.fill();
+        
+        // ship
+        let image = new Image(this.size * 2, this.size * 2);
+        image.src = this.sprite;
+
+        if (this.keyPressed.indexOf('ArrowRight') !== -1) {
+            this.frame = 3;
+        }
+
+        let sW = 70 + 10, sH = 74,
+            sx = (70 + 28) * this.frame, sy = 0,
+            dW = this.size * 2 + 10, dH = this.size * 2,
+            dx = this.x - this.size,
+            dy = this.y - this.size;
+        
+        this.ctx.drawImage(image, sx, sy, sW, sH, dx, dy, dW, dH);
+        // sprite animation
+        this.ticks++;
+        if (this.ticks > this.ticksPerFrame) {
+            this.ticks = 0;
+            this.frame++;
+        }
+        if (this.frame > 2) {
+            this.frame = 0;
+        }
 
         // healthbar
         let height = this.health * 2;
@@ -62,6 +82,10 @@ export default class Ship extends Object {
                 [this.x - this.size, this.y - this.size]
             ]
         ];
+    }
+
+    get sprite() {
+        return Game.assets + 'ship.png'
     }
 
     _calculatePosition() {

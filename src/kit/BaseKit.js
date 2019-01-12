@@ -12,9 +12,9 @@ export default class BaseKit extends Obstacle {
 
     reset() {
         this.position = this._initPosition();
-        this.size = 10;
+        this.size = 25;
         this.health = 0;
-        this.value = this._getRandomValue(5, 20);
+        this.value = 1;
     }
 
     _initPosition() {

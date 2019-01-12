@@ -1,4 +1,5 @@
 import Object from "./Object";
+import Game from "./Game";
 
 export default class Bullet extends Object {
 
@@ -12,13 +13,18 @@ export default class Bullet extends Object {
     draw() {
         this._calculatePosition();
 
-        this.ctx.beginPath();
-        this.ctx.strokeStyle = 'black';
-        this.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-        this.ctx.stroke();
+        let image = new Image(this.size, this.size);
+        image.src = this.sprite;
+
+        this.ctx.drawImage(image, this.x - this.size, this.y - this.size, this.size * 2, this.size * 2);
     }
 
     _calculatePosition() {
         this.x += this.speed;
     }
+
+    get sprite() {
+        return Game.assets + `bullet.png`;
+    }
+
 }
