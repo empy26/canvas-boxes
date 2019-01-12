@@ -13,7 +13,7 @@ export default class KitCollision extends ObstacleCollision {
      * @param {BulletKit} kit 
      */
     handleShipCollision(ship, kit) {
-        super.handleShipCollision(ship, kit);
         kit.apply(this.game);
+        super.handleShipCollision(ship, kit);
     }
 }
